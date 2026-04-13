@@ -1,17 +1,40 @@
-import React, { useState } from 'react';
-import movieData from '../movies.json'; // Your "Database"
+import React, { useEffect, useState } from 'react';
+import {db} from '../firebase.js';
 import MovieFrame from '../components/MovieFrame';
 import MovieCard from '../components/MovieCard';
+import { collection, onSnapshot } from 'firebase/firestore';
 
 const Home = () => {
-  // 1. State for the Popup
+
   const [selectedMovie, setSelectedMovie] = useState(null);
+  const [movieData, setMovieData] = useState([]);
 
-  // 2. A "Helper Function" to save code
-  // This avoids writing the same HTML 4 times for each section
+  useEffect(() => {
+    const unsubscribe = onSnapshot(collection(db, 'movies'), (snapshot) => {
+      const moviesFromCloud = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      setMovieData(moviesFromCloud);
+    });
+    return () => unsubscribe();
+  }, []);
+
+
+  const getCategory = (releaseDate) => {
+    const today = new Date();
+    const rDate = new Date(releaseDate);
+    const diffInDays = (today - rDate) / (1000 * 60 * 60 * 24); // Difference in days
+
+    if (today < rDate) return "upcoming";
+    if (diffInDays >= 0 && diffInDays < 10) return "new-release";
+    return "in-theaters";
+  };
+
+  
   const renderSection = (title, categoryName) => {
-    const filteredMovies = movieData.filter(movie => movie.category === categoryName);
-
+    const filteredMovies = movieData.filter(movie => getCategory(movie.releaseDate) === categoryName);
+   
     return (
       <section className="py-8 px-6 lg:px-12">
         <h2 className="text-2xl font-bold mb-6 text-gray-200">{title}</h2>
@@ -30,28 +53,18 @@ const Home = () => {
 
   return (
     <div className="pb-20">
-      {/* 1. Showcase (We'll use the first movie for now) */}
 
-
-
-      {/* 1. Showcase Area */}
     <section className="relative h-[85vh] w-full overflow-hidden">
-    {/* We take the first movie from the showcase category */}
     {movieData.filter(m => m.category === "new-release").slice(0, 1).map((movie) => (
         <div key={movie.id} className="relative h-full w-full">
-        
-        {/* Background Image */}
         <img 
             src={movie.imageURL} 
             alt={movie.title}
             className="absolute inset-0 w-full h-full object-cover"
         />
-
-        {/* Dark Gradient Overlay (Crucial for text readability) */}
         <div className="absolute inset-0 bg-gradient-to-r from-black via-black/40 to-transparent" />
         <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
 
-        {/* Content */}
         <div className="relative h-full flex flex-col justify-center px-6 lg:px-16 max-w-3xl">
             <span className="bg-red-600 w-fit text-xs font-bold px-3 py-1 rounded-full mb-4 uppercase tracking-widest">
             Now Showing
@@ -70,7 +83,9 @@ const Home = () => {
             >
                 View Details
             </button>
-            <button className="bg-white/20 backdrop-blur-md text-white px-8 py-3 rounded-full font-bold hover:bg-white/30 transition">
+            <button 
+                onClick={() => setSelectedMovie(movie)}
+                className="bg-white/20 backdrop-blur-md text-white px-8 py-3 rounded-full font-bold hover:bg-white/30 transition">
                 Watch Trailer
             </button>
             </div>

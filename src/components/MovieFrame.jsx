@@ -1,6 +1,6 @@
 import { X, Sparkles, ShieldAlert, Play, Star } from 'lucide-react';
 import React, {useState} from 'react';
-
+import { useNavigate } from 'react-router-dom';
 
 const MovieFrame = ({ movie, onClose }) => {
     const [aiData, setAiData] = useState(null);
@@ -18,6 +18,11 @@ const MovieFrame = ({ movie, onClose }) => {
         }, 1500);
     }
 
+    const navigate = useNavigate();
+    const handleBooking = () => {
+        navigate(`/booking/${movie.id}`);
+    }
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm">
       <div className="bg-zinc-900 w-full max-w-4xl rounded-2xl overflow-hidden relative max-h-[90vh] overflow-y-auto">
@@ -27,7 +32,7 @@ const MovieFrame = ({ movie, onClose }) => {
         <div className="aspect-video w-full bg-black">
           <iframe 
             className="w-full h-full"
-            src={movie.trailerURL.replace("watch?v=", "embed/")}
+            src={movie.trailer.replace("watch?v=", "embed/")}
             title="Trailer"
             allowFullScreen
           ></iframe>
@@ -59,6 +64,8 @@ const MovieFrame = ({ movie, onClose }) => {
             <p className="mt-6 text-zinc-400 leading-relaxed line-clamp-3">{movie.description}</p>
           )}
 
+          <p className="text-gray-400 text-sm mt-2">Release Date: {movie.releaseDate}</p>
+
           {/* 3. Buttons */}
           <div className="mt-8 flex gap-4">
             <button 
@@ -72,7 +79,8 @@ const MovieFrame = ({ movie, onClose }) => {
                 <div className=""><Sparkles className="inline mb-0.5 mr-1 text-amber-300 size-4"/>Brief Description (AI)</div>
               )}
             </button>
-            <button className="flex-2 bg-red-600 py-3 text-xl rounded-xl font-bold hover:bg-red-700 transition">
+            <button className="flex-2 cursor-pointer bg-red-600 py-3 text-xl rounded-xl font-bold hover:bg-red-700 transition"
+                    onClick={handleBooking}>
               Book Now
             </button>
           </div>
