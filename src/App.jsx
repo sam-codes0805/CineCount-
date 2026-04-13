@@ -8,7 +8,7 @@ function App() {
     <Router>
       <div className="min-h-screen bg-black text-white font-sans">
         <nav className="p-6 flex justify-between items-center border-b border-gray-800">
-          <h1 className="text-2xl font-bold text-red-600">DISTRICT_CLONE</h1>
+          <h1 className="text-2xl font-bold text-red-600">CineCount</h1>
           <div className="space-x-6 text-sm font-medium">
             <button className="hover:text-red-500">Movies</button>
             <button className="bg-red-600 px-4 py-2 rounded-lg">Sign In</button>
