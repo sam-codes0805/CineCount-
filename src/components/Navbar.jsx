@@ -1,7 +1,12 @@
 import React from 'react';
 import { Search } from 'lucide-react'; // Make sure to import the icon
+import {useLocation, useNavigate} from 'react-router-dom';
 
 const Navbar = ({ setSearchTerm }) => {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const isMoviesPage = location.pathname === '/movies';
   return (
     <nav className="fixed top-0 w-full z-50 bg-black/80 backdrop-blur-md border-b border-zinc-900 px-6 py-4">
       <div className="max-w-7xl mx-auto flex items-center justify-between gap-8">
@@ -12,7 +17,7 @@ const Navbar = ({ setSearchTerm }) => {
         </div>
 
         {/* SEARCH BAR (The New Part) */}
-        <div className="flex-1 max-w-md relative hidden sm:block">
+        {isMoviesPage && (<div className="flex-1 max-w-md relative hidden sm:block">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500" size={18} />
           <input 
             type="text" 
@@ -20,7 +25,7 @@ const Navbar = ({ setSearchTerm }) => {
             className="navbar-search" // Custom class for styling
             onChange={(e) => setSearchTerm(e.target.value)}
           />
-        </div>
+        </div>)}
 
         {/* LINKS */}
         <div className="flex items-center gap-6">

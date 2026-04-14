@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Landing from './pages/Landing';
 import Home from './pages/Home';
 import Booking from './pages/Booking';
 import Admin from './pages/Admin';
@@ -15,7 +16,8 @@ function App() {
         <Navbar setSearchTerm={setSearchTerm} />
         
         <Routes>
-          <Route path="/" element={<Home searchTerm={searchTerm} />} />
+          <Route path="/" element={<Landing/>} />
+          <Route path="/movies" element={<Home searchTerm={searchTerm} />} />
           <Route path="/booking/:id" element={<Booking />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/login" element={<Login />} />

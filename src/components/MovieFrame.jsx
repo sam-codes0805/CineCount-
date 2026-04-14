@@ -1,22 +1,26 @@
-import { X, Sparkles, ShieldAlert, Play, Star } from 'lucide-react';
+import { X, Sparkles, Play, Star, BookOpen, ShieldAlert, Heart, Loader2 } from 'lucide-react';
 import React, {useState} from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getMovieBrief } from '../gemini';
 
 const MovieFrame = ({ movie, onClose }) => {
-    const [aiData, setAiData] = useState(null);
-    const [isGenerating, setIsGenerating] = useState(false);
+    const [briefData, setBriefData] = useState(null);
+    const [loading, setLoading] = useState(false);
 
-    const generateAIDescription = () => {
-        setIsGenerating(true);
+    const handleGenerate = async () => {
+      setLoading(true);
+      const rawText = await getMovieBrief(movie.title, movie.description, movie.releaseDate);
+      
+      // Basic parsing: split the text into sections based on your prompt's headers
+      const sections = rawText.split(/\d\./); 
+      setBriefData({
+        story: sections[1] || "No data",
+        guidance: sections[2] || "No data",
+        recommendation: sections[3] || "No data"
+      });
+      setLoading(false);
+    };
 
-        setTimeout(() => {
-            setAiData({
-                description: `Based on current trends, "${movie.title}" is a must-watch for fans of ${movie.genre}. The film explores deep themes of ${movie.category === 'new-release' ? 'innovation and discovery' : 'human emotion'}, featuring a standout performance by the lead cast.`,
-                advisory: "Parental Guidance: Recommended for ages 13+. Contains mild language and intense sequences."
-            });
-            setIsGenerating(false);
-        }, 1500);
-    }
 
     const navigate = useNavigate();
     const handleBooking = () => {
@@ -47,19 +51,32 @@ const MovieFrame = ({ movie, onClose }) => {
 
 
          {/* 4. AI Section (Hidden until button clicked) */}
-          {aiData ? (
-            <div className="mt-6 p-5 bg-zinc-800/50 rounded-2xl border border-zinc-700 animate-in fade-in zoom-in duration-300">
-              <div className="flex items-center gap-2 text-amber-300 mb-2">
-                <Sparkles size={18} />
-                <span className="text-xs font-black uppercase tracking-widest">AI Generated Insight</span>
-              </div>
-              <p className="text-gray-300 text-sm italic leading-relaxed">"{aiData.description}"</p>
-              
-              <div className="mt-4 flex items-start gap-2 text-orange-400">
-                <ShieldAlert size={16} className="mt-0.5" />
-                <p className="text-[11px] font-bold uppercase tracking-tight">{aiData.advisory}</p>
-              </div>
-            </div>
+          {briefData ? (
+            <div className="grid my-5 gap-4 animate-in fade-in slide-in-from-bottom-4">
+        {/* Storyline */}
+        <div className="bg-zinc-900 border border-zinc-800 p-4 rounded-2xl">
+          <div className="flex items-center gap-2 text-red-500 mb-2 font-bold text-xs uppercase tracking-tighter">
+            <BookOpen size={14}/> Storyline & Motive
+          </div>
+          <p className="text-zinc-300 text-sm leading-relaxed">{briefData.story}</p>
+        </div>
+
+        {/* Guidance */}
+        <div className="bg-zinc-900 border border-zinc-800 p-4 rounded-2xl">
+          <div className="flex items-center gap-2 text-orange-500 mb-2 font-bold text-xs uppercase tracking-tighter">
+            <ShieldAlert size={14}/> Parental Guidance
+          </div>
+          <p className="text-zinc-300 text-sm leading-relaxed">{briefData.guidance}</p>
+        </div>
+
+        {/* Recommendation */}
+        <div className="bg-zinc-900 border border-zinc-800 p-4 rounded-2xl">
+          <div className="flex items-center gap-2 text-blue-500 mb-2 font-bold text-xs uppercase tracking-tighter">
+            <Heart size={14}/> Recommended For
+          </div>
+          <p className="text-zinc-300 text-sm leading-relaxed">{briefData.recommendation}</p>
+        </div>
+      </div>
           ) : (
             <p className="mt-6 text-zinc-400 leading-relaxed line-clamp-3">{movie.description}</p>
           )}
@@ -69,15 +86,11 @@ const MovieFrame = ({ movie, onClose }) => {
           {/* 3. Buttons */}
           <div className="mt-8 flex gap-4">
             <button 
-              onClick={generateAIDescription}
-              disabled={isGenerating}
+              onClick={handleGenerate}
+              disabled={loading}
               className="flex-3 border border-zinc-700 py-4 rounded-2xl font-bold hover:bg-white hover:text-black transition-all flex items-center justify-center gap-2"
             >
-              {isGenerating ? (
-                <span className="animate-pulse">Analyzing Movie...</span>
-              ) : (
-                <div className=""><Sparkles className="inline mb-0.5 mr-1 text-amber-300 size-4"/>Brief Description (AI)</div>
-              )}
+              {loading ? <Loader2 className="animate-spin" /> : "Generate AI Insights"}
             </button>
             <button className="flex-2 cursor-pointer bg-red-600 py-3 text-xl rounded-xl font-bold hover:bg-red-700 transition"
                     onClick={handleBooking}>
@@ -92,3 +105,41 @@ const MovieFrame = ({ movie, onClose }) => {
 };
 
 export default MovieFrame;
+
+
+// <div className="mt-8 space-y-6">
+//     <button 
+//       onClick={handleGenerate} 
+//       className="w-full bg-red-600 hover:bg-red-700 py-3 rounded-xl font-black uppercase text-xs tracking-widest flex items-center justify-center gap-2"
+//     >
+//       {loading ? <Loader2 className="animate-spin" /> : "Generate AI Insights"}
+//     </button>
+
+//     {briefData && (
+//       <div className="grid gap-4 animate-in fade-in slide-in-from-bottom-4">
+//         {/* Storyline */}
+//         <div className="bg-zinc-900 border border-zinc-800 p-4 rounded-2xl">
+//           <div className="flex items-center gap-2 text-red-500 mb-2 font-bold text-xs uppercase tracking-tighter">
+//             <BookOpen size={14}/> Storyline & Motive
+//           </div>
+//           <p className="text-zinc-300 text-sm leading-relaxed">{briefData.story}</p>
+//         </div>
+
+//         {/* Guidance */}
+//         <div className="bg-zinc-900 border border-zinc-800 p-4 rounded-2xl">
+//           <div className="flex items-center gap-2 text-orange-500 mb-2 font-bold text-xs uppercase tracking-tighter">
+//             <ShieldAlert size={14}/> Parental Guidance
+//           </div>
+//           <p className="text-zinc-300 text-sm leading-relaxed">{briefData.guidance}</p>
+//         </div>
+
+//         {/* Recommendation */}
+//         <div className="bg-zinc-900 border border-zinc-800 p-4 rounded-2xl">
+//           <div className="flex items-center gap-2 text-blue-500 mb-2 font-bold text-xs uppercase tracking-tighter">
+//             <Heart size={14}/> Recommended For
+//           </div>
+//           <p className="text-zinc-300 text-sm leading-relaxed">{briefData.recommendation}</p>
+//         </div>
+//       </div>
+//     )}
+//   </div>
