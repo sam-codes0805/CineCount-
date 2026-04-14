@@ -125,7 +125,7 @@ const Booking = () => {
           <MapPin size={16} /> Choose City
         </label>
         <div className="flex flex-wrap gap-4">
-          <select className='rounded-xl border-2 px-6 py-3 bg-black' name="" defaultValue="" id="" onChange={(e) => setSelectedCity(e.target.value)}>
+          <select className='rounded-xl border-2 px-6 w-full py-3 bg-black' name="" defaultValue="" id="" onChange={(e) => setSelectedCity(e.target.value)}>
             <option value="">Select a city</option>
             {uniqueCities.map(city => (
               <option key={city} value={city}>
@@ -137,7 +137,6 @@ const Booking = () => {
       </div>
 
       {/* 1. Location Selection */}
-      {selectedCity !== "" && (
         <div className="grid gap-4 mb-10">
           <label className="flex items-center gap-2 text-zinc-400 font-bold uppercase text-xs tracking-widest">
             <MapPin size={16} /> Choose Cinema
@@ -154,10 +153,8 @@ const Booking = () => {
             ))}
           </div>
         </div>
-      )}
-
       {/* 2. Timing Selection */}
-      {selectedLocation !== "" && (<div className="grid gap-4 mb-10">
+      <div className="grid gap-4 mb-10">
         <label className="flex items-center gap-2 text-zinc-400 font-bold uppercase text-xs tracking-widest">
           <Clock size={16} /> Select Session
         </label>
@@ -172,15 +169,15 @@ const Booking = () => {
             </button>
           ))}
         </div>
-      </div>)}
+      </div>
 
       {/* Next Step Button */}
-      {selectedLocation && selectedTime && (
-        <button className="w-full bg-red-600 py-4 rounded-2xl font-black text-lg animate-bounce"
+        <button 
+          disabled={!(selectedLocation && selectedTime && selectedCity)}
+          className="w-full bg-red-600 py-4 rounded-2xl font-black text-lg animate-bounce"
           onClick= {() => setShowSeatSelection(true)}>
-          CONTINUE TO SEAT SELECTION
+          {!(selectedLocation && selectedTime && selectedCity) ? 'Select all options to proceed' : 'CONTINUE TO SEAT SELECTION'}
         </button>
-      )}
 
 
       {showSeatSelection && <div className="mt-12 mb-20">
@@ -191,6 +188,7 @@ const Booking = () => {
         </div>
 
         {/* SEAT GRID */}
+      <div className='w-full overflow-x-auto pb-6 cursor-grab active:cursor-grabbing'>
         <div className="flex flex-col gap-6 items-center">
           {rows.map((row) => (
             <div key={row.id} className="flex items-center gap-4">
@@ -217,6 +215,7 @@ const Booking = () => {
             </div>
           ))}
         </div>
+      </div> 
 
           
       {/* 1. THE LEGEND (Fills the white space) */}
@@ -235,14 +234,14 @@ const Booking = () => {
             </div>
           </div>
 
-      </div>  }
+      
 
 
 
       
 
 
-    {selectedSeats.length > 0 && (
+    {selectedSeats.length > 0 ? (
       <div className="fixed bottom-0 left-0 w-full bg-zinc-900 border-t border-zinc-800 p-6 animate-in slide-in-from-bottom duration-500">
         <div className="max-w-5xl mx-auto flex justify-between items-center">
           
@@ -264,7 +263,21 @@ const Booking = () => {
           </button>
 
         </div>
-      </div>)}
+      </div>) : (
+        <div className="fixed bottom-0 left-0 w-full bg-zinc-900 border-t border-zinc-800 p-6">
+          <div className="max-w-5xl mx-auto flex justify-between items-center">
+            <p className="text-zinc-400 text-xs font-bold uppercase tracking-widest"> No seats selected</p>
+            <button 
+              disabled
+              className="bg-red-600/50 text-white px-10 py-4 rounded-2xl font-black cursor-not-allowed"
+            >
+              PAY NOW 
+            </button>
+          </div>
+        </div>
+      )}
+
+      </div>  }
       
     </div>
   );

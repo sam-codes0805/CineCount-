@@ -3,7 +3,38 @@ import {db} from '../firebase';
 import { collection, addDoc, getDocs, updateDoc, deleteDoc, doc, query, where } from "firebase/firestore";
 import { Plus, Edit, Trash2, RefreshCw } from 'lucide-react';
 
+import { auth } from '../firebase';
+import { onAuthStateChanged } from 'firebase/auth';
+import { useNavigate } from 'react-router-dom';
+import {signOut } from 'firebase/auth';
+
 const Admin = () => {
+
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // This listener checks if a user is currently signed in
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        // If no user is logged in, redirect to login page immediately
+        navigate('/login');
+      }
+    });
+    return () => unsubscribe();
+  }, [navigate]);
+
+
+  const handleLogout = async () => {
+  try {
+    await signOut(auth);
+    navigate('/login'); // Redirect back to login after signing out
+  } catch (err) {
+    console.error("Error signing out:", err);
+  }
+  };
+  
+
     const [mode, setMode] = useState('add');  //add, edit, remove
     const [status, setStatus] = useState('idle'); // idle, success
     const [searchTitle, setSearchTitle] = useState(''); // name of the movie to search for edit or remove
@@ -73,7 +104,7 @@ const Admin = () => {
   }
 
     return (
-        <div className="p-10 max-w-4xl mx-auto">
+    <div className="p-10 max-w-4xl mx-auto">
         
       {/* // add, edit, remove buttons */}
         <div className="flex gap-4 mb-10 justify-center">

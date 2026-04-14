@@ -1,1 +1,8 @@
 @import "tailwindcss";
+
+  .navbar-search {
+    @apply w-full bg-zinc-900/50 border border-zinc-800 py-2.5 pl-12 pr-4 
+           rounded-full text-sm text-white outline-none transition-all
+           focus:bg-zinc-900 focus:border-red-600 focus:ring-1 focus:ring-red-600/50 
+           placeholder-zinc-600;
+  }
