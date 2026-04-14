@@ -12,11 +12,11 @@ const Navbar = ({ setSearchTerm }) => {
         </div>
 
         {/* SEARCH BAR (The New Part) */}
-        <div className="flex-1 max-w-md relative hidden md:block">
+        <div className="flex-1 max-w-md relative hidden sm:block">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500" size={18} />
           <input 
             type="text" 
-            placeholder="Search movies, genres..." 
+            placeholder="Search exact movie title..." 
             className="navbar-search" // Custom class for styling
             onChange={(e) => setSearchTerm(e.target.value)}
           />

@@ -33,7 +33,7 @@ const Home = (props) => {
 
   
   const renderSection = (title, categoryName) => {
-    const filteredMovies = movieData.filter(movie => movie.title.includes(props.searchTerm) && movie.title.toLowerCase().includes(props.searchTerm.toLowerCase()) && getCategory(movie.releaseDate) === categoryName);
+    const filteredMovies = movieData.filter(movie => movie.title.includes(props.searchTerm) && getCategory(movie.releaseDate) === categoryName);
    
     return (
       <section className="py-8 px-6 lg:px-12">
