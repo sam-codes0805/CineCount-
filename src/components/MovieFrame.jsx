@@ -93,8 +93,9 @@ const MovieFrame = ({ movie, onClose }) => {
               {loading ? <Loader2 className="animate-spin" /> : "Generate AI Insights"}
             </button>
             <button className="flex-2 cursor-pointer bg-red-600 py-3 text-xl rounded-xl font-bold hover:bg-red-700 transition"
+                    disabled={movie.category === "upcoming"}
                     onClick={handleBooking}>
-              Book Now
+              {movie.category === "upcoming" ? "Coming Soon" : "Book Now"}
             </button>
           </div>
 

@@ -8,11 +8,13 @@ const Navbar = ({ setSearchTerm }) => {
 
   const isMoviesPage = location.pathname === '/movies';
   return (
-    <nav className="fixed top-0 w-full z-50 bg-black/80 backdrop-blur-md border-b border-zinc-900 px-6 py-4">
+    <nav className="top-0 w-full z-50 bg-black/80 backdrop-blur-md border-b border-zinc-900 px-6 py-4">
       <div className="max-w-7xl mx-auto flex items-center justify-between gap-8">
         
         {/* LOGO */}
-        <div className="text-white font-black italic text-2xl tracking-tighter cursor-pointer">
+        <div className="text-white font-black italic text-2xl tracking-tighter cursor-pointer"
+          onClick={() => navigate('/')}
+        >
           CINECOUNT<span className="text-red-600">.</span>IN
         </div>
 
@@ -29,8 +31,16 @@ const Navbar = ({ setSearchTerm }) => {
 
         {/* LINKS */}
         <div className="flex items-center gap-6">
-        <button className="hover:text-red-500">Movies</button>
-        <button className="bg-red-600 px-4 py-2 rounded-lg">Sign In</button>
+        <button className="hover:text-red-500 hover:cursor-pointer"
+          onClick={() => navigate('/movies')}
+        >
+          Movies
+        </button>
+        <button className="bg-red-600 hover:cursor-pointer px-4 py-2 rounded-lg"
+          onClick={() => navigate('/login')}
+        >
+          Sign In
+        </button>
         </div>
         
       </div>

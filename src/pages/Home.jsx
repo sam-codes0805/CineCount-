@@ -4,8 +4,10 @@ import MovieFrame from '../components/MovieFrame';
 import MovieCard from '../components/MovieCard';
 import { collection, onSnapshot } from 'firebase/firestore';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const Home = (props) => {
+  const navigate = useNavigate();
 
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [movieData, setMovieData] = useState([]);
@@ -99,9 +101,15 @@ const Home = (props) => {
             <p className="text-zinc-400 text-sm md:text-base line-clamp-2 mb-6 max-w-lg">
               {movie.description}
             </p>
-            <button className="bg-white text-black px-8 py-3 rounded-xl font-black uppercase text-xs tracking-widest hover:bg-red-600 hover:text-white transition-all active:scale-95">
-              Get Tickets
-            </button>
+            <button 
+  onClick={(e) => {
+    e.stopPropagation(); // Prevents the click from bubbling to the slide
+    navigate(`/booking/${movie.id}`);
+  }} 
+  className="relative z-30 bg-white text-black px-8 py-3 rounded-xl font-black uppercase text-xs tracking-widest hover:bg-red-600 hover:text-white transition-all active:scale-95 cursor-pointer"
+>
+  Get Tickets
+</button>
           </div>
         </div>
       ))}

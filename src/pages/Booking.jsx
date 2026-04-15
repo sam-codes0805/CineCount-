@@ -1,11 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { MapPin, Clock } from 'lucide-react';
 import Cities from '../cities-name-list.json';
+import BookingFlow from '../components/BookingFlow';
+import {doc, getDoc} from 'firebase/firestore';
+import { db } from '../firebase';
 
 const Booking = () => {
-  const uniqueCities = [...new Set(Cities)];
+
+  const [movie, setMovie] = useState(null);
+  
   const { id } = useParams(); // Gets the movie ID from the URL
+  useEffect(() => {
+  const fetchMovie = async () => {
+    const docRef = doc(db, "movies", id);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      setMovie(docSnap.data()); // This sets the 'movie' variable
+    }
+  };
+  fetchMovie();
+}, [id]);
+
+
+  const uniqueCities = [...new Set(Cities)];
   
   const [selectedCity, setSelectedCity] = useState('');
   const [selectedLocation, setSelectedLocation] = useState('');
@@ -58,62 +76,9 @@ const Booking = () => {
     const fee = selectedSeats.length > 0 ? 30 : 0;
     const finalAmount = calculateTotal() + fee;
 
-    const [isConfirmed, setIsConfirmed] = useState(false);
+   
 
-    if (isConfirmed) {
-  return (
-    <div className="min-h-screen flex items-center justify-center p-6 pt-24 bg-black">
-      <div className="bg-zinc-900 border border-zinc-800 p-8 rounded-[2rem] max-w-sm w-full relative overflow-hidden">
-        {/* Ticket Header */}
-        <div className="text-center mb-6">
-          <div className="bg-green-500 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 shadow-[0_0_20px_rgba(34,197,94,0.4)]">
-            <svg className="text-black w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7"></path></svg>
-          </div>
-          <h2 className="text-2xl font-black uppercase tracking-tighter">Booking Confirmed</h2>
-          <p className="text-zinc-500 text-sm">Enjoy your movie!</p>
-        </div>
-
-        {/* Ticket Details */}
-        <div className="space-y-4 border-y border-dashed border-zinc-800 py-6 my-6">
-          <div className="flex justify-between">
-            <span className="text-zinc-500 text-xs font-bold uppercase">Cinema</span>
-            <span className="text-white text-xs font-bold">{selectedLocation}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-zinc-500 text-xs font-bold uppercase">Seats</span>
-            <span className="text-red-500 text-xs font-bold">{selectedSeats.join(', ')}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-zinc-500 text-xs font-bold uppercase">Time</span>
-            <span className="text-white text-xs font-bold">{selectedTime}</span>
-          </div>
-        </div>
-
-        {/* Fake QR Code Area */}
-        <div className="bg-white p-4 rounded-xl aspect-square flex items-center justify-center mb-6">
-           {/* You can use a real QR library later, for now a placeholder */}
-           <div className="w-full h-full border-4 border-black border-double flex items-center justify-center">
-              <span className="text-black font-black text-center text-[8px] uppercase leading-none">
-                Scan at Theatre Entry<br/>CINECOUNT-IN-OFFICIAL
-              </span>
-           </div>
-        </div>
-
-        <button 
-          onClick={() => window.location.href = '/'}
-          className="w-full py-4 bg-zinc-800 rounded-xl font-bold text-sm hover:bg-zinc-700 transition"
-        >
-          BACK TO HOME
-        </button>
-
-        {/* Decorative Ticket "Cuts" */}
-        <div className="absolute -left-4 top-1/2 -translate-y-1/2 w-8 h-8 bg-black rounded-full"></div>
-        <div className="absolute -right-4 top-1/2 -translate-y-1/2 w-8 h-8 bg-black rounded-full"></div>
-      </div>
-    </div>
-  );
-}
-
+  const [showPayment, setShowPayment] = useState(false);
 
   return (
     <div className="min-h-screen h-full pt-20 px-6 max-w-5xl mx-auto">
@@ -241,7 +206,9 @@ const Booking = () => {
       
 
 
-    {selectedSeats.length > 0 ? (
+    {!showPayment ? ( <>
+    
+      { selectedSeats.length > 0 ? (
       <div className="fixed bottom-0 left-0 w-full bg-zinc-900 border-t border-zinc-800 p-6 animate-in slide-in-from-bottom duration-500">
         <div className="max-w-5xl mx-auto flex justify-between items-center">
           
@@ -256,8 +223,8 @@ const Booking = () => {
           </div>
 
           <button 
-            className="bg-red-600 text-white px-10 py-4 rounded-2xl font-black hover:bg-red-700 transition-all hover:scale-105 active:scale-95 shadow-[0_0_30px_rgba(220,38,38,0.3)]"
-            onClick={() => setIsConfirmed(true)}
+            className="bg-red-600 hover:cursor-pointer text-white px-10 py-4 rounded-2xl font-black hover:bg-red-700 transition-all hover:scale-105 active:scale-95 shadow-[0_0_30px_rgba(220,38,38,0.3)]"
+            onClick={() => setShowPayment(true)}
           >
             PAY NOW
           </button>
@@ -277,6 +244,18 @@ const Booking = () => {
         </div>
       )}
 
+    </>) : 
+    (<BookingFlow 
+        movie={movie}
+        selectedSeats={selectedSeats}
+        totalPrice={finalAmount}
+        cinema={selectedLocation}
+        time={selectedTime}
+        location={selectedCity}
+        onComplete={() => console.log("Payment Successful!")}
+      />)
+      }
+
       </div>  }
       
     </div>
@@ -284,3 +263,67 @@ const Booking = () => {
 };
 
 export default Booking;
+
+
+
+
+
+
+
+
+
+//  const [isConfirmed, setIsConfirmed] = useState(false);
+
+//     if (isConfirmed) {
+//   return (
+//     <div className="min-h-screen flex items-center justify-center p-6 pt-24 bg-black">
+//       <div className="bg-zinc-900 border border-zinc-800 p-8 rounded-[2rem] max-w-sm w-full relative overflow-hidden">
+//         {/* Ticket Header */}
+//         <div className="text-center mb-6">
+//           <div className="bg-green-500 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 shadow-[0_0_20px_rgba(34,197,94,0.4)]">
+//             <svg className="text-black w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7"></path></svg>
+//           </div>
+//           <h2 className="text-2xl font-black uppercase tracking-tighter">Booking Confirmed</h2>
+//           <p className="text-zinc-500 text-sm">Enjoy your movie!</p>
+//         </div>
+
+//         {/* Ticket Details */}
+//         <div className="space-y-4 border-y border-dashed border-zinc-800 py-6 my-6">
+//           <div className="flex justify-between">
+//             <span className="text-zinc-500 text-xs font-bold uppercase">Cinema</span>
+//             <span className="text-white text-xs font-bold">{selectedLocation}</span>
+//           </div>
+//           <div className="flex justify-between">
+//             <span className="text-zinc-500 text-xs font-bold uppercase">Seats</span>
+//             <span className="text-red-500 text-xs font-bold">{selectedSeats.join(', ')}</span>
+//           </div>
+//           <div className="flex justify-between">
+//             <span className="text-zinc-500 text-xs font-bold uppercase">Time</span>
+//             <span className="text-white text-xs font-bold">{selectedTime}</span>
+//           </div>
+//         </div>
+
+//         {/* Fake QR Code Area */}
+//         <div className="bg-white p-4 rounded-xl aspect-square flex items-center justify-center mb-6">
+//            {/* You can use a real QR library later, for now a placeholder */}
+//            <div className="w-full h-full border-4 border-black border-double flex items-center justify-center">
+//               <span className="text-black font-black text-center text-[8px] uppercase leading-none">
+//                 Scan at Theatre Entry<br/>CINECOUNT-IN-OFFICIAL
+//               </span>
+//            </div>
+//         </div>
+
+//         <button 
+//           onClick={() => window.location.href = '/'}
+//           className="w-full py-4 bg-zinc-800 rounded-xl font-bold text-sm hover:bg-zinc-700 transition"
+//         >
+//           BACK TO HOME
+//         </button>
+
+//         {/* Decorative Ticket "Cuts" */}
+//         <div className="absolute -left-4 top-1/2 -translate-y-1/2 w-8 h-8 bg-black rounded-full"></div>
+//         <div className="absolute -right-4 top-1/2 -translate-y-1/2 w-8 h-8 bg-black rounded-full"></div>
+//       </div>
+//     </div>
+//   );
+// }

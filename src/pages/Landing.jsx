@@ -20,7 +20,7 @@ const Landing = () => {
 
       <button 
         onClick={() => navigate('/movies')}
-        className="z-10 group flex items-center gap-3 bg-white text-black px-8 py-4 rounded-2xl font-black uppercase tracking-widest hover:bg-red-600 hover:text-white transition-all duration-300"
+        className="z-10 hover:cursor-pointer group flex items-center gap-3 bg-white text-black px-8 py-4 rounded-2xl font-black uppercase tracking-widest hover:bg-red-600 hover:text-white transition-all duration-300"
       >
         Explore Movies
         <ArrowRight className="group-hover:translate-x-2 transition-transform" />
