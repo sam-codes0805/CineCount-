@@ -1,27 +1,50 @@
-# Movie Ticket booking Web App - AI Powered Web App
+# 🍿 CINECOUNT
 
-A high-performance, cinematic movie ticket booking platform inspired by District.in. Built as a school project to demonstrate modern frontend architecture and simulated AI integration.
+> **An AI-Driven, Full-Stack Cinema Booking & Management System**
 
-## 🚀 Phase 1: Completed (Day 1)
-- **Cinematic UI:** Built with React 18 and Tailwind CSS for a premium, dark-themed experience.
-- **Dynamic Homepage:** Features a "Big 3" Showcase area and categorized movie sections (New Releases, In-Theaters, Upcoming).
-- **Intelligent Detail Frame:** A modal system that includes embedded trailers and a simulated AI-powered movie description & parent advisory generator.
-- **Responsive Design:** Fully optimized for mobile, tablet, and desktop viewing.
+![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![Firebase](https://img.shields.io/badge/Firebase-039BE5?style=for-the-badge&logo=Firebase&logoColor=white)
+![Gemini AI](https://img.shields.io/badge/Google_Gemini-8E75B2?style=for-the-badge&logo=google&logoColor=white)
+![EmailJS](https://img.shields.io/badge/EmailJS-F1A50E?style=for-the-badge&logo=minutemailer&logoColor=white)
 
-## 🛠️ Tech Stack
-- **Frontend:** React.js (Vite)
-- **Styling:** Tailwind CSS
-- **Icons:** Lucide React
-- **Routing:** React Router DOM
-- **Data:** JSON-based mock database (Transitioning to Firebase in Phase 2)
-
-## 🏗️ Architecture Note
-This project follows a **Component-Based Architecture**. Logic is separated into reusable UI components (`MovieCard`, `MovieFrame`) and container pages (`Home`, `Booking`). 
-
-## 🏃‍♂️ How to Run
-1. Clone the repo
-2. Install dependencies: `npm install`
-3. Start development server: `npm run dev`
+CINECOUNT is a next-generation movie reservation platform that modernizes the digital ticketing experience. By integrating Large Language Models (LLMs) and real-time cloud databases, it bridges the gap between static booking sites and intelligent, user-centric applications.
 
 ---
-*Developed by Somesh Kumar*
+
+## ✨ Key Features
+
+* 🤖 **Dynamic AI Metadata:** Powered by **Google Gemini 2.5 Flash**, the system analyzes movie plots in real-time to generate personalized insights, including Storylines, Parental Guidance, and Target Audience Recommendations.
+* 💺 **Interactive Seat Matrix:** A reactive 2D seating grid that tracks user selection, prevents double-booking logic, and calculates dynamic pricing instantly without page reloads.
+* 🎟️ **Automated E-Ticketing:** Utilizes **EmailJS** for an SMTP-less delivery pipeline. Upon successful transaction simulation, users instantly receive a professionally formatted HTML E-Ticket in their inbox.
+* 🎬 **Cinematic UI/UX:** A high-fidelity, responsive "Dark Mode" interface built with **Tailwind CSS**, featuring an auto-playing Showcase Slider for featured titles.
+* 🛡️ **Resilient Architecture:** Includes API fallback logic. If AI or network services timeout, the system gracefully degrades to local database content to ensure uninterrupted user flow.
+
+---
+
+## 🏗️ System Architecture
+
+1.  **Frontend (React + Vite):** Orchestrates state management and user interface.
+2.  **Database (Cloud Firestore):** Stores the movie catalog, showtimes, and featured flags.
+3.  **External APIs:**
+    * *Google Generative Language API:* For real-time NLP and content generation.
+    * *EmailJS:* For compiling React state data into deliverable email payloads.
+
+---
+
+## 🚀 Getting Started
+
+Follow these instructions to set up and run the project on your local machine.
+
+### Prerequisites
+* Node.js (v18 or higher)
+* NPM or Yarn
+* A Google Gemini API Key
+* An EmailJS Account
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone [https://github.com/yourusername/cinecount.git](https://github.com/yourusername/cinecount.git)
+   cd cinecount
