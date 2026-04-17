@@ -13,7 +13,7 @@ const BookingFlow = ({ movie, selectedSeats, totalPrice, location, cinema, time,
       seats: selectedSeats.join(", "),
       total_price: totalPrice,
       email: toEmail,
-      booking_Id: movie.id + '-' + Date.now(),
+      booking_Id: Math.random().toString(36).substring(2, 10).toUpperCase(), // Random booking ID
       cinema: cinema,
       time: time,
       location: Location
@@ -31,7 +31,8 @@ const BookingFlow = ({ movie, selectedSeats, totalPrice, location, cinema, time,
 
   
 
-  const handlePay = () => {
+  const handlePay = (e) => {
+    e.preventDefault();
     setStep('processing');
     setTimeout(() => {
       setStep('success');
@@ -50,17 +51,19 @@ const BookingFlow = ({ movie, selectedSeats, totalPrice, location, cinema, time,
           </div>
           
           <div className="space-y-4">
-            <input type="text" placeholder="CARD NUMBER" className="payment-input w-full bg-black border border-zinc-800 p-4 rounded-2xl text-white outline-none focus:border-red-600 transition" />
+            <form action="" onSubmit={(e) => {handlePay(e)}}>
+              <input type="text" required placeholder="CARD NUMBER" className="payment-input w-full bg-black border border-zinc-800 p-4 rounded-2xl text-white outline-none focus:border-red-600 transition" />
             <input 
               type="email" 
+              required
               placeholder="EMAIL" 
               className="payment-input w-full bg-black border border-zinc-800 p-4 rounded-2xl text-white outline-none focus:border-red-600 transition" 
               value={toEmail}
               onChange={(e) => setToEmail(e.target.value)}
             />
             <div className="grid grid-cols-2 gap-4">
-              <input type="text" placeholder="MM/YY" className="payment-input bg-black border border-zinc-800 p-4 rounded-2xl text-white outline-none focus:border-red-600 transition" />
-              <input type="text" placeholder="CVV" className="payment-input bg-black border border-zinc-800 p-4 rounded-2xl text-white outline-none focus:border-red-600 transition" />
+              <input type="text" required placeholder="MM/YY" className="payment-input bg-black border border-zinc-800 p-4 rounded-2xl text-white outline-none focus:border-red-600 transition" />
+              <input type="text" required placeholder="CVV" className="payment-input bg-black border border-zinc-800 p-4 rounded-2xl text-white outline-none focus:border-red-600 transition" />
             </div>
             
             <div className="pt-4">
@@ -68,13 +71,10 @@ const BookingFlow = ({ movie, selectedSeats, totalPrice, location, cinema, time,
                 <span>TOTAL AMOUNT</span>
                 <span className="text-white">₹{totalPrice}</span>
               </div>
-              <button 
-                onClick={handlePay}
-                className="w-full bg-red-600 hover:bg-red-700 py-4 rounded-2xl font-black tracking-widest transition-all active:scale-95 text-white"
-              >
-                CONFIRM & PAY
-              </button>
+              <input type="submit" value="CONFIRM & PAY" className="w-full bg-red-600 hover:bg-red-700 py-4 rounded-2xl font-black tracking-widest transition-all active:scale-95 text-white" />
             </div>
+            </form>
+            
           </div>
         </div>
       )}

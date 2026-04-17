@@ -102,14 +102,14 @@ const Home = (props) => {
               {movie.description}
             </p>
             <button 
-  onClick={(e) => {
-    e.stopPropagation(); // Prevents the click from bubbling to the slide
-    navigate(`/booking/${movie.id}`);
-  }} 
-  className="relative z-30 bg-white text-black px-8 py-3 rounded-xl font-black uppercase text-xs tracking-widest hover:bg-red-600 hover:text-white transition-all active:scale-95 cursor-pointer"
->
-  Get Tickets
-</button>
+              onClick={(e) => {
+                e.stopPropagation(); // Prevents the click from bubbling to the slide
+                navigate(`/booking/${movie.id}`);
+              }} 
+              className="relative z-30 bg-white text-black px-8 py-3 rounded-xl font-black uppercase text-xs tracking-widest hover:bg-red-600 hover:text-white transition-all active:scale-95 cursor-pointer"
+              >
+              Get Tickets
+            </button>
           </div>
         </div>
       ))}
