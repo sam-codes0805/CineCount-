@@ -42,6 +42,17 @@ Follow these instructions to set up and run the project on your local machine.
 * A Google Gemini API Key
 * An EmailJS Account
 
+## Live Demo Link & ScreenShots 
+https://college-project-cine-count.vercel.app/
+
+![Landing Page](image.png)
+![home page- showcase](image-1.png)
+![movie sections](image-2.png)
+![Movie Detail Page](image-3.png)
+![booking page](image-4.png)
+![booking Confirm page](image-5.png)
+![Email E-Ticket](image-6.png)
+
 ### Installation
 
 1. **Clone the repository**
