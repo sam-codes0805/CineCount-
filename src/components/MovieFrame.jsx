@@ -51,7 +51,7 @@ const MovieFrame = ({ movie, onClose }) => {
 
 
          {/* 4. AI Section (Hidden until button clicked) */}
-          {briefData ? (
+          {briefData && briefData.story !== "No data" ? (
             <div className="grid my-5 gap-4 animate-in fade-in slide-in-from-bottom-4">
         {/* Storyline */}
         <div className="bg-zinc-900 border border-zinc-800 p-4 rounded-2xl">
