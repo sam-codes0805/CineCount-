@@ -19,7 +19,10 @@ const BookingFlow = ({ movie, selectedSeats, totalPrice, location, cinema, time,
       location: Location
     };
 
-    emailjs.send('service_73scbjp', 'template_gb77oi7', templateParams, 'qHz18SkEukWIj16f5')
+    emailjs.send( import.meta.env.VITE_EMAIL_SERVICE_ID, import.meta.env.VITE_EMAIL_TEMPLATE_ID,
+      templateParams,
+      import.meta.env.VITE_EMAIL_PUBLIC_KEY
+    )
     .then((response) => {
       console.log('SUCCESS!', response.status, response.text);
     }, (err) => {
